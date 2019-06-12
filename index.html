@@ -20,24 +20,55 @@
       let ctx = canvas.getContext("2d");
 
       let paddleWidth = 100;
-      let paddleHeight = 10;
+      let paddleHeight = 11;
       let paddleX = (canvas.width - paddleWidth) / 2;
       let paddleY = canvas.height - paddleHeight;
       let rightPressed = false;
       let leftPressed = false;
 
-      
-      
-      function drawPaddle() {
-        ctx.beginPath();
-        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#A6ABB0" 
-      }
-      
+      let ballRadius = 11;
+      let ballX = canvas.width / 2;
+      let ballY = canvas.height - paddleHeight - ballRadius;
+      let dX = 4;
+      let dY = -4;
+
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         drawPaddle();
         movePaddle();
+        drawBall();
+        moveBall();
+
+       
+
+      }
+
+      function drawBall() {
+        ctx.beginPath()
+        ctx.arc(ballX, ballY, ballRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = "#827ED3";
+        ctx.fill();
+        ctx.closePath()
+      }
+
+      function moveBall () {
+        ballX += dX;
+        ballY += dY;
+
+        if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
+          dX = -dX;
+        }
+
+        if (ballY - ballRadius < 0 || (ballX > paddleX && ballX < paddleX + paddleWidth && ballY + ballRadius > paddleY)) {
+          dY = -dY;
+        }
+      }
+
+      function drawPaddle() {
+        ctx.beginPath();
+        ctx.fillStyle = "#A6ABB0";
+        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+        ctx.closePath();
       }
       
       function movePaddle() {
