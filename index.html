@@ -32,15 +32,65 @@
       let dX = 4;
       let dY = -4;
 
+      let columns = 5;
+      let rows = 3;
+      let bricks = [];
+      let brickHeight = 18;
+      let brickWidth = 97;
+      let padding = 11;
+
+      for (let i = 0; i < columns; i++) {
+        bricks.push([]);
+        for (let c = 0; c < rows; c++) {
+          bricks[i].push({ x:0, y:0, draw:true });
+        }
+      }
+      
+      
+
+
+
+
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         drawPaddle();
         movePaddle();
         drawBall();
         moveBall();
+        gameOver();
+        drawBricks();
+        collisionDetection();
+      }
 
-       
+      
+      function drawBricks() {
+        for (let i = 0; i < columns; i++) {
+          for (let c = 0; c < rows; c++) {
+            let brick = bricks[i][c];
+            if (brick.draw) {
+              let x = i * (brickWidth + padding) + padding;
+              let y = c * (brickHeight + padding) + padding + 30;
+              brick.x = x;
+              brick.y = y;
+              ctx.beginPath();
+              ctx.fillStyle = "#5CC884";
+              ctx.fillRect(x, y, brickWidth, brickHeight)
+              ctx.closePath();
+            }
+          }
+        }
+      }
 
+      function collisionDetection() {
+        for (let i = 0; i < columns; i++) {
+          for (let c = 0; c < rows; c++) {
+            let brick = bricks[i][c]
+            if (ballX > brick.x && ballX < brick.x + brickWidth && ballY - ballRadius < brick.y + brickHeight && ballY + ballRadius > brick.y && brick.draw) {
+              dY = -dY;
+              brick.draw = false;
+            }
+          }
+        }
       }
 
       function drawBall() {
@@ -79,6 +129,14 @@
         }
       }
 
+      function gameOver() {
+        if (ballY + 5 > canvas.height) {
+          alert("Game Over");
+          clearInterval(end);
+          location.reload();
+        }
+      }
+
       function keyDownHandler (e) {
         if (e.key === "ArrowRight") {
           rightPressed = true;
@@ -97,7 +155,7 @@
 
       document.addEventListener('keydown', keyDownHandler)
       document.addEventListener('keyup', keyUpHandler)
-      setInterval(draw, 20)
+      let end = setInterval(draw, 20)
      
     </script>
 
