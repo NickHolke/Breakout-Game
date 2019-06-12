@@ -45,14 +45,20 @@
           bricks[i].push({ x:0, y:0, draw:true });
         }
       }
-      
-      
 
+      let score = 0;
 
-
+      function drawScore () {
+        ctx.beginPath();
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Score: " + score, 20, 27);
+        ctx.closePath();
+      }
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        drawScore();
         drawPaddle();
         movePaddle();
         drawBall();
@@ -88,6 +94,7 @@
             if (ballX > brick.x && ballX < brick.x + brickWidth && ballY - ballRadius < brick.y + brickHeight && ballY + ballRadius > brick.y && brick.draw) {
               dY = -dY;
               brick.draw = false;
+              score++;
             }
           }
         }
@@ -132,6 +139,10 @@
       function gameOver() {
         if (ballY + 5 > canvas.height) {
           alert("Game Over");
+          clearInterval(end);
+          location.reload();
+        } else if (score === 15) {
+          alert("You Win!");
           clearInterval(end);
           location.reload();
         }
